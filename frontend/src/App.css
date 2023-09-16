@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+
+.card-actions {
+  padding: 15px;
+}
+
+td {
+  background: #E9EDDE;
+  color: #242424;
+}

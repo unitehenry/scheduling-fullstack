@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import * as api from './services/apiService';
 import m7Logo from '/Logo-black.png'
 import './App.css'
+import { Link } from "react-router-dom";
 
 function App() {
   const [nurses, setNurses] = useState<unknown[] | null>(null);
@@ -53,11 +54,20 @@ function App() {
             {nurses && (nurses.map((nurse: any) => (
               <tr key={nurse.id}>
                 <td>{nurse.id}</td>
-                <td>{nurse.name}</td>
+                <td>
+                  <Link to={`/nurses/${nurse.id}`}>
+                    {nurse.name}
+                  </Link>
+                </td>
               </tr>
             )))}
           </tbody>
         </table>
+        <div className='card-actions'>
+          <Link to="/nurses/new">
+            Add nurse
+          </Link>
+        </div>
       </div>
       <div className='card'>
         <h2>Shift Requirements</h2>
