@@ -16,9 +16,9 @@ export class NurseController {
     return this.nurseService.getNurse(params.id);
   }
 
-  @Post('preferences')  
-  async setPreferences(@Body('id') id: number, @Body('preferences') preferences: string): Promise<any> {
+  @Post(':id/preferences')  
+  async setPreferences(@Param() params: any, @Body('preferences') preferences: string): Promise<any> {
     const parsedPreferences = JSON.parse(preferences);
-    return this.nurseService.setPreferences(id, parsedPreferences);
+    return this.nurseService.setPreferences(params.id, parsedPreferences);
   }
 }

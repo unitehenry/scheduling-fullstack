@@ -35,12 +35,17 @@ function NurseDetails({ nurse, setNurse } : NurseDetailsProps) {
   )
 }
 
-function NurseSchedule() {
+interface NurseScheduleProps {
+  preferences : unkown|any;
+  setPreferences : (key : string, value : string) => void;
+}
+
+function NurseSchedule({ preferences, setPreferences } : NurseScheduleProps) {
 
   const availabilityOptions = [
     {
-      key: 'unavailable',
-      label: 'Unavailable'
+      key: 'any',
+      label: 'Any shift'
     },
     {
       key: 'day',
@@ -51,40 +56,47 @@ function NurseSchedule() {
       label: 'Night shift'
     },
     {
-      key: 'any',
-      label: 'Any shift'
-    }
+      key: 'unavailable',
+      label: 'Unavailable'
+    },
   ]
 
   return (
     <table>
-      <tr>
-        <th>
-          Day of the week
-        </th>
-        <th>
-          Availibility preference
-        </th>
-      </tr>
-      {
-        [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
-          .map(dow => (
-            <tr key={dow}>
-              <td>{dow}</td>
-              <td>
-                <select className="nurse-schedule-select">
-                  {
-                    availabilityOptions.map(opt => (
-                      <option key={opt.key} value={opt.key}>
-                        { opt.label }
-                      </option>
-                    ))
-                  }
-                </select>
-              </td>
-            </tr>
-          ))
-      }
+      <thead>
+        <tr>
+          <th>
+            Day of the week
+          </th>
+          <th>
+            Availibility preference
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
+            .map(dow => (
+              <tr key={dow}>
+                <td>{dow}</td>
+                <td>
+                  <select
+                    className="nurse-schedule-select"
+                    onChange={evt => setPreferences(dow, evt.target.value)}
+                    value={preferences[dow]}>
+                    {
+                      availabilityOptions.map(opt => (
+                        <option key={opt.key} value={opt.key}>
+                          { opt.label }
+                        </option>
+                      ))
+                    }
+                  </select>
+                </td>
+              </tr>
+            ))
+        }
+      </tbody>
     </table>
   )
 }
@@ -95,6 +107,7 @@ export default function Nurse() {
   const params = useParams();
 
   const [ nurse, setNurse ] = useState<unkown|null>();
+  const [ preferences, setPreferences ] = useState<unkown|null>();
 
   useEffect(() => {
     if (params.nurseId === 'new') {
@@ -107,11 +120,22 @@ export default function Nurse() {
         const nurseId = parseInt(params.nurseId ?? '0', 10);
         const nurse = await api.default.getNurse(nurseId);
         setNurse(nurse);
+        setPreferences(nurse.preferences || {})
       }
 
       fetchNurse().catch(console.error);
     }
   }, []);
+
+  const onSave = async (evt) => {
+    try {
+      evt.preventDefault();
+      await api.default.setNursePreferences(nurse.id, JSON.stringify(preferences));
+      alert('Nurse saved');
+    } catch(err) {
+      console.error(err);
+    }
+  }
 
   if (!nurse) return <></>
 
@@ -120,12 +144,14 @@ export default function Nurse() {
       <NurseDetails
         nurse={nurse}
         setNurse={(key, value) => setNurse({ ...nurse, [key]: value })} />
-      <NurseSchedule />
+      <NurseSchedule
+        preferences={preferences}
+        setPreferences={(key, value) => setPreferences({ ...preferences, [key]: value })} />
       <div className="nurse-actions">
         <a href="#" onClick={() => navigate(-1)}>
           Back
         </a>
-        <a href="#">
+        <a href="#" onClick={onSave}>
           Save Nurse
         </a>
       </div>
