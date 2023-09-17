@@ -88,6 +88,11 @@ function App() {
             )))}
           </tbody>
         </table>
+        <div className='card-actions'>
+          <Link to="/shifts/new">
+            Add shift requirement
+          </Link>
+        </div>
       </div>
       <div className='card'>
         <h2>Schedules</h2>

@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 #root {
   max-width: 1280px;
   width: 100%;
@@ -148,8 +152,10 @@ form .form-input {
   font-size: 1rem;
 }
 
-form .form-input input {
+form .form-input input, form .form-input select {
   font-size: 20px;
+  width: 100%;
+  max-width: 500px;
 }
 
 form .actions {
@@ -158,13 +164,13 @@ form .actions {
   gap: 5px;
 }
 
-.nurse-page {
+.nurse-page, .shift-page {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.nurse-actions {
+.nurse-actions, .shift-actions {
   display: flex;
   gap: 15px;
 }
