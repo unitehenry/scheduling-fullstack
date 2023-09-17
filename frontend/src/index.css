@@ -1,3 +1,51 @@
+#root {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.card-actions {
+  padding: 15px;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -101,5 +149,28 @@ form .form-input {
 }
 
 form .form-input input {
-  font-size: 1rem;
+  font-size: 20px;
+}
+
+form .actions {
+  margin: 10px 0;
+  display: flex;
+  gap: 5px;
+}
+
+.nurse-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nurse-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.nurse-schedule-select {
+  width: 100%;
+  font-size: 20px;
+  padding: 5px;
 }

@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import * as api from './services/apiService';
 import m7Logo from '/Logo-black.png'
-import './App.css'
 import { Link } from "react-router-dom";
 
 function App() {
@@ -12,7 +11,7 @@ function App() {
 
   useEffect(() => {
     const fetchNurses = async () => {
-      const nurses = await api.default.getNurses(); // TODO: this appears to be getting called twice on page load... why?
+      const nurses = await api.default.getNurses();
       setNurses(nurses);
     }
 
