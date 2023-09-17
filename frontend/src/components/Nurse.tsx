@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import * as api from '../services/apiService';
 
 const fields = [
@@ -83,7 +83,7 @@ function NurseSchedule({ preferences, setPreferences } : NurseScheduleProps) {
                   <select
                     className="nurse-schedule-select"
                     onChange={evt => setPreferences(dow, evt.target.value)}
-                    value={preferences[dow]}>
+                    value={preferences && preferences[dow]}>
                     {
                       availabilityOptions.map(opt => (
                         <option key={opt.key} value={opt.key}>
@@ -109,8 +109,10 @@ export default function Nurse() {
   const [ nurse, setNurse ] = useState<unkown|null>();
   const [ preferences, setPreferences ] = useState<unkown|null>();
 
+  const isNew = params.nurseId === 'new';
+
   useEffect(() => {
-    if (params.nurseId === 'new') {
+    if (isNew) {
       setNurse({
         name: '',
         preference: {},
@@ -130,7 +132,13 @@ export default function Nurse() {
   const onSave = async (evt) => {
     try {
       evt.preventDefault();
-      await api.default.setNursePreferences(nurse.id, JSON.stringify(preferences));
+      if (isNew) {
+        const create = await api.default.createNurse(nurse.name);
+        await api.default.setNursePreferences(create.id, JSON.stringify(preferences));
+        navigate(`/nurses/${create.id}`);
+      } else {
+        await api.default.setNursePreferences(nurse.id, JSON.stringify(preferences));
+      }
       alert('Nurse saved');
     } catch(err) {
       console.error(err);
@@ -148,9 +156,9 @@ export default function Nurse() {
         preferences={preferences}
         setPreferences={(key, value) => setPreferences({ ...preferences, [key]: value })} />
       <div className="nurse-actions">
-        <a href="#" onClick={() => navigate(-1)}>
-          Back
-        </a>
+        <Link to="/">
+          Return to Dashboard
+        </Link>
         <a href="#" onClick={onSave}>
           Save Nurse
         </a>

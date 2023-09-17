@@ -8,6 +8,10 @@ const instance = axios.create({
 
 export default {
   // Nurse endpoints
+  createNurse : async (name : string) => {
+    const { data } = await instance.post('/nurses', { name });
+    return data;
+  },
   getNurse : async (nurseId : number) => {
     const { data } = await instance.get(`/nurses/${nurseId}`);
     return data;
