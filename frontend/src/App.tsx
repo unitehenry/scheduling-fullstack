@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     const fetchRequirements = async () => {
       const requirements = await api.default.getShiftRequirements();
-      setRequirements(requirements.shiftRequirements);
+      setRequirements(requirements);
     }
 
     fetchRequirements().catch(console.error);
@@ -41,7 +41,6 @@ function App() {
       </div>
       <div className='card'>
         <h2>Nurses</h2>
-        {/* TODO: Each nurse should link to a nurse details page where preferences can be entered for the nurse */}
         <table>
           <thead>
             <tr>
@@ -88,20 +87,19 @@ function App() {
             )))}
           </tbody>
         </table>
-        <div className='card-actions'>
-          <Link to="/shifts/new">
-            Add shift requirement
-          </Link>
-        </div>
       </div>
       <div className='card'>
         <h2>Schedules</h2>
-        <div>TODO</div>
         {schedules && (schedules.map((schedule: any) => (
           <div className='schedule' key={schedule.id}>
             {/* TODO: Display table of available schedules */}
           </div>
         )))}
+        <div className='card-actions'>
+          <a href="#">
+            Generate schedules
+          </a>
+        </div>
       </div>
     </>
   )

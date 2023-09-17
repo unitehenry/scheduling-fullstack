@@ -4,7 +4,6 @@ import './index.css'
 
 import App from './App.tsx'
 import Nurse from './components/Nurse.tsx';
-import Shift from './components/Shift.tsx';
 
 import {
   createBrowserRouter,
@@ -20,10 +19,6 @@ const router = createBrowserRouter([
     path: '/nurses/:nurseId',
     element: <Nurse />
   },
-  {
-    path: '/shifts/:shiftId',
-    element: <Shift />
-  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
