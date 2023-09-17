@@ -63,6 +63,8 @@ th, td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
+  background: #E9EDDE;
+  color: #242424;
 }
 tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -83,4 +85,21 @@ th {
   button {
     background-color: #f9f9f9;
   }
+}
+
+form {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+form .form-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  font-size: 1rem;
+}
+
+form .form-input input {
+  font-size: 1rem;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';  
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';  
 import { NurseService } from './nurse.service';  
 import { NurseEntity } from './nurse.entity';  
 
@@ -9,6 +9,11 @@ export class NurseController {
   @Get()
   async getNurses(): Promise<NurseEntity[]> {
     return this.nurseService.getNurses();
+  }
+
+  @Get(':id')
+  async getNurse(@Param() params : any): Promise<NurseEntity> {
+    return this.nurseService.getNurse(params.id);
   }
 
   @Post('preferences')  

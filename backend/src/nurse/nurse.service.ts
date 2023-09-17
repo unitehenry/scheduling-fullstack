@@ -14,6 +14,10 @@ export class NurseService {
     return this.nurseRepository.find();
   }
 
+  async getNurse(id : number): Promise<NurseEntity> {
+    return this.nurseRepository.findOneByOrFail({id});
+  }
+
   async setPreferences(id: number, preferences: any): Promise<NurseEntity> {
     const nurse = await this.nurseRepository.findOneByOrFail({id});
     if (!nurse) {
