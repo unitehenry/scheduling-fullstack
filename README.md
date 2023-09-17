@@ -63,3 +63,11 @@ We will evaluate your work based on the following criteria, in order of importan
 Feel free to be creative in how you choose to represent the schedule on the frontend. Comment your code where necessary so we can understand your thought process.
 
 We look forward to seeing what you create!
+
+- [x] Nurse details page
+- [x] Add nurse
+- [x] Display shift requirements
+- [ ] Generate a schedule
+- [ ] Schedule details page
+- [ ] Show day/shift fulfilled/required table
+- [ ] Show list of nurses shifts table
