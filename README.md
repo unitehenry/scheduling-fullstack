@@ -67,7 +67,7 @@ We look forward to seeing what you create!
 - [x] Nurse details page
 - [x] Add nurse
 - [x] Display shift requirements
-- [ ] Generate a schedule
-- [ ] Schedule details page
-- [ ] Show day/shift fulfilled/required table
-- [ ] Show list of nurses shifts table
+- [x] Generate a schedule
+- [x] Schedule details page
+- [x] Show day/shift fulfilled/required table
+- [x] Show list of nurses shifts table
