@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ScheduleEntity } from './schedule.entity';
 import { ShiftService } from '../shift/shift.service';
 import { NurseService } from '../nurse/nurse.service';
-import { ShiftEntity, ShiftType } from '../shift/shift.entity';
+import { ShiftEntity, ShiftDayOfWeek, ShiftType } from '../shift/shift.entity';
 
 @Injectable()
 export class ScheduleService {
@@ -44,13 +44,13 @@ export class ScheduleService {
           if (preferences && preferences[dayOfWeek]) {
             const pref = preferences[dayOfWeek];
             if (pref !== 'unavailable' && (pref === 'any' || pref === shiftType)) {
-              const shift = this.shiftService.createShift(shiftType as ShiftType, nurse, schedule);
+              const shift = this.shiftService.createShift(dayOfWeek as ShiftDayOfWeek, shiftType as ShiftType, nurse, schedule);
               shifts.push(shift);
               shiftsCreated++;
             }
           } else {
             // create shift
-            const shift = this.shiftService.createShift(shiftType as ShiftType, nurse, schedule);
+            const shift = this.shiftService.createShift(dayOfWeek as ShiftDayOfWeek, shiftType as ShiftType, nurse, schedule);
             shifts.push(shift);
             shiftsCreated++;
           }

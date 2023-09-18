@@ -4,6 +4,7 @@ import './index.css'
 
 import App from './App.tsx'
 import Nurse from './components/Nurse.tsx';
+import ScheduleDetails from './components/ScheduleDetails.tsx';
 
 import {
   createBrowserRouter,
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     path: '/nurses/:nurseId',
     element: <Nurse />
   },
+  {
+    path: '/schedules/:scheduleId',
+    element: <ScheduleDetails />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

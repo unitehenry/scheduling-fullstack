@@ -186,3 +186,7 @@ form .actions {
   padding: 5px;
   margin: 5px 0;
 }
+
+.shift-warning td {
+  background: #EDFF71;
+}

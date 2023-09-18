@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ShiftEntity, ShiftRequirements, ShiftType } from './shift.entity';
+import { ShiftEntity, ShiftRequirements, ShiftDayOfWeek, ShiftType } from './shift.entity';
 import { NurseEntity } from '../nurse/nurse.entity';
 import { ScheduleEntity } from '../schedule/schedule.entity';
 
@@ -14,8 +14,9 @@ export class ShiftService {
     private readonly shiftRepository: Repository<ShiftEntity>,
   ) {}
 
-  async createShift(type : ShiftType, nurse : NurseEntity, schedule: ScheduleEntity) {
+  async createShift(dayOfWeek : ShiftDayOfWeek, type : ShiftType, nurse : NurseEntity, schedule: ScheduleEntity) {
     return this.shiftRepository.save({
+      dayOfWeek,
       type,
       nurse,
       schedule,
