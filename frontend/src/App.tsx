@@ -2,9 +2,12 @@
 import { useEffect, useState } from 'react';
 import * as api from './services/apiService';
 import m7Logo from '/Logo-black.png'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function App() {
+
+  const navigate = useNavigate();
+
   const [nurses, setNurses] = useState<unknown[] | null>(null);
   const [requirements, setRequirements] = useState<unknown[] | null>(null);
   const [schedules, setSchedules] = useState<unknown[] | null>(null);
@@ -29,12 +32,24 @@ function App() {
     fetchRequirements().catch(console.error);
   }, []);
 
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      const schedules = await api.default.getSchedules();
+      console.log(schedules);
+      setSchedules(schedules);
+    }
+
+    fetchSchedules().catch(console.error);
+  }, []);
+
   const generateSchedule = async (evt) => {
     try {
       setIsGenerating(true);
       evt.preventDefault();
-      console.log(await api.default.generateSchedule());
+      const schedule = await api.default.generateSchedule();
+      navigate(`/schedules/${schedule.id}`);
     } catch(err) {
+      alert('Failed to generate schedule');
       console.error(err);
     } finally {
       setTimeout(() => {
@@ -108,7 +123,9 @@ function App() {
         <h2>Schedules</h2>
         {schedules && (schedules.map((schedule: any) => (
           <div className='schedule' key={schedule.id}>
-            {/* TODO: Display table of available schedules */}
+            <Link to={`/schedules/${schedule.id}`}>
+              Schedule #{ schedule.id }
+            </Link>
           </div>
         )))}
         <div className='card-actions'>
