@@ -190,3 +190,9 @@ form .actions {
 .shift-warning td {
   background: #EDFF71;
 }
+
+.schedule-details-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

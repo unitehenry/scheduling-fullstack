@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import * as api from '../services/apiService';
 
 export default function ScheduleDetails() {
@@ -8,13 +8,13 @@ export default function ScheduleDetails() {
 
   const [requirements, setRequirements] = useState<unknown[] | null>(null);
   const [schedule, setSchedule] = useState<unknown | null>(null);
+  const [shifts, setShifts] = useState<unkown[] | null>(null);
 
   useEffect(() => {
     if (schedule) return;
 
     const fetchSchedule = async () => {
       const schedule = await api.default.getSchedule(params.scheduleId);
-      console.log(schedule);
       setSchedule(schedule);
     }
 
@@ -32,6 +32,18 @@ export default function ScheduleDetails() {
     fetchRequirements().catch(console.error);
   }, []);
 
+  useEffect(() => {
+    if (shifts) return;
+
+    const fetchShifts = async () => {
+      const shifts = await api.default.getShiftsBySchedule(params.scheduleId);
+      console.log(shifts);
+      setShifts(shifts);
+    }
+
+    fetchShifts().catch(console.error);
+  }, []);
+
   const getShiftCount = (dayOfWeek : string, shiftType : string) => {
     return schedule.shifts.reduce((count, shift) => {
       if (shift.type === shiftType && shift.dayOfWeek === dayOfWeek)
@@ -45,7 +57,7 @@ export default function ScheduleDetails() {
   }
 
   return (
-    <div>
+    <div className="schedule-details-page">
       <h2>Schedule {schedule.id}</h2>
       <table>
         <thead>
@@ -71,6 +83,30 @@ export default function ScheduleDetails() {
                 </tr>
               )
             })
+          }
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Day of the week</th>
+            <th>Shift type</th>
+            <th>Nurse</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            shifts.map(shift => (
+              <tr key={shift.id}>
+                <td>{shift.dayOfWeek}</td>
+                <td>{shift.type}</td>
+                <td>
+                  <Link to={`/nurses/${shift.nurse.id}`}>
+                    {shift.nurse.name}
+                  </Link>
+                </td>
+              </tr>
+            ))
           }
         </tbody>
       </table>

@@ -1,17 +1,20 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { Inject, Injectable, NotImplementedException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ShiftEntity, ShiftRequirements, ShiftDayOfWeek, ShiftType } from './shift.entity';
 import { NurseEntity } from '../nurse/nurse.entity';
 import { ScheduleEntity } from '../schedule/schedule.entity';
+import { NurseService } from '../nurse/nurse.service';
 
 @Injectable()
 export class ShiftService {
   constructor(
     @InjectRepository(ShiftEntity)
     private readonly shiftRepository: Repository<ShiftEntity>,
+    @Inject(forwardRef(() => NurseService))
+    private readonly nurseService: NurseService,
   ) {}
 
   async createShift(dayOfWeek : ShiftDayOfWeek, type : ShiftType, nurse : NurseEntity, schedule: ScheduleEntity) {
@@ -29,11 +32,17 @@ export class ShiftService {
   }
 
   async getShiftsByNurse(nurseId: string) {
-    throw new NotImplementedException();
+    return this.shiftRepository.createQueryBuilder('shifts')
+      .leftJoinAndSelect('shifts.nurse', 'nurses')  
+      .where('nurseId = :nurseId', { nurseId })
+      .getMany()
   }
 
   async getShiftsBySchedule(scheduleId: string) {
-    throw new NotImplementedException();
+  return this.shiftRepository.createQueryBuilder('shifts')
+      .leftJoinAndSelect('shifts.nurse', 'nurses')
+      .where('scheduleId = :scheduleId', { scheduleId })
+      .getMany()
   }
 
   async getShiftRequirements(): Promise<ShiftRequirements[]> {

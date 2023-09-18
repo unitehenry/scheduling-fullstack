@@ -35,7 +35,6 @@ function App() {
   useEffect(() => {
     const fetchSchedules = async () => {
       const schedules = await api.default.getSchedules();
-      console.log(schedules);
       setSchedules(schedules);
     }
 
