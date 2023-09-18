@@ -9,6 +9,8 @@ function App() {
   const [requirements, setRequirements] = useState<unknown[] | null>(null);
   const [schedules, setSchedules] = useState<unknown[] | null>(null);
 
+  const [ isGenerating, setIsGenerating ] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchNurses = async () => {
       const nurses = await api.default.getNurses();
@@ -26,6 +28,20 @@ function App() {
 
     fetchRequirements().catch(console.error);
   }, []);
+
+  const generateSchedule = async (evt) => {
+    try {
+      setIsGenerating(true);
+      evt.preventDefault();
+      console.log(await api.default.generateSchedule());
+    } catch(err) {
+      console.error(err);
+    } finally {
+      setTimeout(() => {
+        setIsGenerating(false);
+      }, 1000);
+    }
+  }
 
   return (
     <>
@@ -96,9 +112,17 @@ function App() {
           </div>
         )))}
         <div className='card-actions'>
-          <a href="#">
-            Generate schedules
-          </a>
+          {
+            isGenerating ? (
+              <span>
+                Generating schedule, please wait...
+              </span>
+            ) : (
+              <a href="#" onClick={generateSchedule}>
+                Generate schedule
+              </a>
+            )
+          }
         </div>
       </div>
     </>

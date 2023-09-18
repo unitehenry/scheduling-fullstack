@@ -2,17 +2,69 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ScheduleEntity } from './schedule.entity';
+import { ShiftService } from '../shift/shift.service';
+import { NurseService } from '../nurse/nurse.service';
+import { ShiftEntity, ShiftType } from '../shift/shift.entity';
 
 @Injectable()
 export class ScheduleService {
   constructor(
     @InjectRepository(ScheduleEntity)
     private readonly scheduleRepository: Repository<ScheduleEntity>,
+    private readonly shiftService: ShiftService,
+    private readonly nurseService: NurseService,
   ) {}
 
-  async generateSchedule(startDate: Date, endDate: Date): Promise<any> {
-    // TODO: Complete the implementation of this method
-    throw new NotImplementedException();
+  async generateSchedule(): Promise<any> {
+    // Create schedule
+    const schedule = await this.scheduleRepository.save({ shifts: [] });
+    // Get all shift requirements
+    const shiftRequirements = await this.shiftService.getShiftRequirements();
+    // Get all nurses
+    const nurses = await this.nurseService.getNurses();
+    // Current nurse pointer = 0
+    let currentNurseIdx = 0;
+    const shifts : Promise<ShiftEntity>[] = [];
+    // Iterate through each day * shift type
+    [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ].forEach(dayOfWeek => {
+      [ 'day', 'night' ].forEach(shiftType => {
+        const requirement = shiftRequirements.find(req => req.shift === shiftType && req.dayOfWeek === dayOfWeek);
+        let shiftsCreated = 0;
+        let endingNurseIdx = currentNurseIdx - 1;
+        if (currentNurseIdx === 0) {
+          endingNurseIdx = (nurses.length - 1);
+        }
+        if (currentNurseIdx < 0) {
+          endingNurseIdx = 0;
+        }
+        while(shiftsCreated < (requirement?.nursesRequired ?? 0) && currentNurseIdx !== endingNurseIdx) {
+          // If nurse can work that day, add shift
+          const nurse = nurses[currentNurseIdx];
+          const preferences = nurse.preferences as any;
+          if (preferences && preferences[dayOfWeek]) {
+            const pref = preferences[dayOfWeek];
+            if (pref !== 'unavailable' && (pref === 'any' || pref === shiftType)) {
+              const shift = this.shiftService.createShift(shiftType as ShiftType, nurse, schedule);
+              shifts.push(shift);
+              shiftsCreated++;
+            }
+          } else {
+            // create shift
+            const shift = this.shiftService.createShift(shiftType as ShiftType, nurse, schedule);
+            shifts.push(shift);
+            shiftsCreated++;
+          }
+          const nextNurseIdx = currentNurseIdx + 1;
+          if (nurses[nextNurseIdx] === undefined) {
+            currentNurseIdx = 0;
+          } else {
+            currentNurseIdx = nextNurseIdx;
+          }
+        }
+      });
+    });
+    await Promise.all(shifts);
+    return this.scheduleRepository.findOneByOrFail({ id: schedule.id });
   }
 
   async getSchedules(): Promise<any> {

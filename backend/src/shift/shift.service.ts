@@ -3,7 +3,9 @@ import * as path from 'path';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ShiftEntity, ShiftRequirements } from './shift.entity';
+import { ShiftEntity, ShiftRequirements, ShiftType } from './shift.entity';
+import { NurseEntity } from '../nurse/nurse.entity';
+import { ScheduleEntity } from '../schedule/schedule.entity';
 
 @Injectable()
 export class ShiftService {
@@ -11,6 +13,15 @@ export class ShiftService {
     @InjectRepository(ShiftEntity)
     private readonly shiftRepository: Repository<ShiftEntity>,
   ) {}
+
+  async createShift(type : ShiftType, nurse : NurseEntity, schedule: ScheduleEntity) {
+    return this.shiftRepository.save({
+      type,
+      nurse,
+      schedule,
+      date: new Date()
+    });
+  }
 
   async getAllShifts() {
     return this.shiftRepository.find();

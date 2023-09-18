@@ -15,11 +15,8 @@ export class ScheduleController {
     return this.scheduleService.getScheduleById(id);
   }
 
-  @Post()
-  async generateSchedule(@Body('startDate') startDate: Date, @Body('endDate') endDate: Date): Promise<any> {
-    // TODO: Complete the implementation of this method
-    // Each time this method is called, a new schedule should be generated
-    // based on current nurse preferences and schedule requirements for the given dates
-    throw new NotImplementedException();
+  @Post('generate')
+  async generateSchedule(): Promise<any> {
+    return this.scheduleService.generateSchedule();
   }
 }
